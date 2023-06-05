@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>URL Shortener</title>
+  <style>
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .short-url {
+      margin-top: 20px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>URL Shortener</h1>
+    <div class="form-group">
+      <label for="url">Enter a URL:</label>
+      <input type="text" id="url" placeholder="https://example.com">
+    </div>
+    <button id="shorten-btn">Shorten URL</button>
+    <div class="short-url" id="short-url"></div>
+  </div>
+
+  <script>
+    const shortenBtn = document.getElementById('shorten-btn');
+    const urlInput = document.getElementById('url');
+    const shortUrlDisplay = document.getElementById('short-url');
+
+    shortenBtn.addEventListener('click', () => {
+      const url = urlInput.value;
+      if (!url) {
+        return;
+      }
+
+      fetch('/shorten', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          const shortUrl = data.shortUrl;
+          shortUrlDisplay.textContent = `Shortened URL: ${shortUrl}`;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+</body>
+</html>
